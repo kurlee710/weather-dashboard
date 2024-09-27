@@ -1,17 +1,46 @@
-// TODO: Define a City class with name and id properties
+import * as fs from "fs/promises";
+import * as path from "path";
 
-// TODO: Complete the HistoryService class
+class City {
+  constructor(public id: number, public name: string) {}
+}
+
 class HistoryService {
-  // TODO: Define a read method that reads from the searchHistory.json file
-  // private async read() {}
-  // TODO: Define a write method that writes the updated cities array to the searchHistory.json file
-  // private async write(cities: City[]) {}
-  // TODO: Define a getCities method that reads the cities from the searchHistory.json file and returns them as an array of City objects
-  // async getCities() {}
-  // TODO Define an addCity method that adds a city to the searchHistory.json file
-  // async addCity(city: string) {}
-  // * BONUS TODO: Define a removeCity method that removes a city from the searchHistory.json file
-  // async removeCity(id: string) {}
+  private filePath = path.join(__dirname, "searchHistory.json");
+
+  private async read(): Promise<City[]> {
+    try {
+      const data = await fs.readFile(this.filePath, "utf-8");
+      return JSON.parse(data).map((city: any) => new City(city.id, city.name));
+    } catch (error) {
+      if (error instanceof Error && (error as any).code === "ENOENT") {
+        return [];
+      }
+      throw error;
+    }
+  }
+
+  private async write(cities: City[]): Promise<void> {
+    await fs.writeFile(this.filePath, JSON.stringify(cities, null, 2), "utf-8");
+  }
+
+  async getCities(): Promise<City[]> {
+    return await this.read();
+  }
+
+  async addCity(name: string): Promise<void> {
+    const cities = await this.read();
+    const id = cities.length ? cities[cities.length - 1].id + 1 : 1;
+    const newCity = new City(id, name);
+    cities.push(newCity);
+    await this.write(cities);
+  }
+
+  async removeCity(id: number): Promise<void> {
+    let cities = await this.read();
+    cities = cities.filter((city) => city.id !== id);
+    await this.write(cities);
+  }
 }
 
 export default new HistoryService();
