@@ -121,4 +121,16 @@ class WeatherService {
   }
   // TODO: Complete getWeatherForCity method
   // async getWeatherForCity(city: string) {}
+  async getWeatherForCity(city: string): Promise<Weather[]> {
+    this.cityName = city;
+    this.coordinates = await this.fetchAndDestructureLocationData();
+    const currentWeatherData = await this.fetchWeatherData(this.coordinates);
+    const currentWeather = this.parseCurrentWeather(currentWeatherData);
+    const forecastData = await this.fetchWeatherData(this.coordinates);
+    const forecastArray = this.buildForecastArray(
+      currentWeather,
+      forecastData.daily
+    );
+    return [currentWeather, ...forecastArray];
+  }
 }
