@@ -94,6 +94,12 @@ class WeatherService {
   }
   // TODO: Build parseCurrentWeather method
   // private parseCurrentWeather(response: any) {}
+  private parseCurrentWeather(response: any): Weather {
+    const { main, weather } = response;
+    const { temp: temperature, humidity } = main;
+    const { description } = weather[0];
+    return new Weather(temperature, humidity, description, this.coordinates);
+  }
   // TODO: Complete buildForecastArray method
   // private buildForecastArray(currentWeather: Weather, weatherData: any[]) {}
   // TODO: Complete getWeatherForCity method
