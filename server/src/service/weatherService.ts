@@ -62,6 +62,9 @@ class WeatherService {
   }
   // TODO: Create buildGeocodeQuery method
   // private buildGeocodeQuery(): string {}
+  private buildGeocodeQuery(): string {
+    return `${this.cityName}`;
+  }
   // TODO: Create buildWeatherQuery method
   // private buildWeatherQuery(coordinates: Coordinates): string {}
   // TODO: Create fetchAndDestructureLocationData method
