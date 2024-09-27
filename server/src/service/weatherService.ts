@@ -1,6 +1,3 @@
-import dotenv from "dotenv";
-dotenv.config();
-
 // Define an interface for the Coordinates object
 interface Coordinates {
   latitude: number;
@@ -27,11 +24,34 @@ class Weather {
   }
 }
 
-// TODO: Complete the WeatherService class
+// Complete the WeatherService class
 class WeatherService {
+  private baseURL: string;
+  private apiKey: string;
+  private cityName: string;
+
+  constructor() {
+    this.baseURL =
+      process.env.API_BASE_URL || "https://api.openweathermap.org/data/2.5";
+    this.apiKey = process.env.API_KEY || "";
+    this.cityName = "";
+  }
   // TODO: Define the baseURL, API key, and city name properties
   // TODO: Create fetchLocationData method
   // private async fetchLocationData(query: string) {}
+  private async fetchLocationData(query: string): Promise<any> {
+    const url = `${this.baseURL}/geo/1.0/direct?q=${query}&limit=1&appid=${this.apiKey}`;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error("Failed to fetch location data");
+      }
+      const data = await response.json();
+      return data[0];
+    } catch (error) {
+      throw new Error("Failed to fetch location data");
+    }
+  }
   // TODO: Create destructureLocationData method
   // private destructureLocationData(locationData: Coordinates): Coordinates {}
   // TODO: Create buildGeocodeQuery method
