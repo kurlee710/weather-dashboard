@@ -67,6 +67,10 @@ class WeatherService {
   }
   // TODO: Create buildWeatherQuery method
   // private buildWeatherQuery(coordinates: Coordinates): string {}
+  private buildWeatherQuery(coordinates: Coordinates): string {
+    const { latitude, longitude } = coordinates;
+    return `${this.baseURL}/weather?lat=${latitude}&lon=${longitude}&appid=${this.apiKey}`;
+  }
   // TODO: Create fetchAndDestructureLocationData method
   // private async fetchAndDestructureLocationData() {}
   // TODO: Create fetchWeatherData method
