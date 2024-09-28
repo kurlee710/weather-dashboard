@@ -1,3 +1,5 @@
+import e from "express";
+
 // Define an interface for the Coordinates object
 interface Coordinates {
   latitude: number;
@@ -37,6 +39,12 @@ class WeatherService {
     this.apiKey = process.env.API_KEY || "";
     this.cityName = "";
     this.coordinates = { latitude: 0, longitude: 0 };
+  }
+  async getWeather(city: string): Promise<Weather> {
+    this.cityName = city;
+    this.coordinates = await this.fetchAndDestructureLocationData();
+    const currentWeatherData = await this.fetchWeatherData(this.coordinates);
+    return this.parseCurrentWeather(currentWeatherData);
   }
   // TODO: Define the baseURL, API key, and city name properties
   // TODO: Create fetchLocationData method
@@ -134,3 +142,5 @@ class WeatherService {
     return [currentWeather, ...forecastArray];
   }
 }
+
+export default new WeatherService();
